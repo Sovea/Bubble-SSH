@@ -91,7 +91,7 @@ type chose_env_model struct {
 
 func (m chose_env_model) ssh_handler() tea.Cmd {
 	return tea.Tick(time.Second, func(time.Time) tea.Msg {
-		port_status := service_port.Raw_connect("127.0.0.1",[]string{"22"})
+		port_status := service_port.Raw_connect("127.0.0.1", []string{"22"})
 		ssh_handler_status := false
 		var err error = nil
 		if port_status == false {
@@ -341,8 +341,8 @@ func updateChoices(msg tea.Msg, m chose_env_model) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "j", "down":
 			m.Choice += 1
-			if m.Choice > len(env_List) {
-				m.Choice = len(env_List)
+			if m.Choice >= len(env_List) {
+				m.Choice = len(env_List) - 1
 			}
 		case "k", "up":
 			m.Choice -= 1
@@ -352,7 +352,12 @@ func updateChoices(msg tea.Msg, m chose_env_model) (tea.Model, tea.Cmd) {
 		case "enter":
 			m.Chosen = true
 			m.Ticks = 0
-			return m, frame()
+			if m.Choice < (len(env_List) - 1) {
+				return m, frame()
+			} else {
+				return m, tea.Quit
+			}
+
 		}
 
 	case tickMsg:
@@ -400,6 +405,7 @@ func updateChosen(msg tea.Msg, m chose_env_model) (tea.Model, tea.Cmd) {
 		return m, cmd
 
 	case exitMsg:
+		return m, tea.Batch(m.exit_handler(), defer_close(3))
 
 	default:
 		return m, spinner.Tick
