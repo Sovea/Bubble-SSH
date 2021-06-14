@@ -91,7 +91,7 @@ type chose_env_model struct {
 
 func (m chose_env_model) ssh_handler() tea.Cmd {
 	return tea.Tick(time.Second, func(time.Time) tea.Msg {
-		port_status := service_port.CheckPort("22")
+		port_status := service_port.Raw_connect("127.0.0.1",[]string{"22"})
 		ssh_handler_status := false
 		var err error = nil
 		if port_status == false {
