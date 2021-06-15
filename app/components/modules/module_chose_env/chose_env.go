@@ -214,7 +214,7 @@ func (m chose_env_model) ssh_handler() tea.Cmd {
 		ssh_handler_status := false
 		var err error = nil
 		if port_status == false {
-			fmt.Println("SSH service not exist.")
+			// fmt.Println("SSH service not exist.")
 			if m.Choice == 0 {
 				ssh_handler_status, err = service_cmd.CMD_Exec("apt", "install", "openssh-server", "-y")
 			} else if m.Choice == 1 {
@@ -226,7 +226,7 @@ func (m chose_env_model) ssh_handler() tea.Cmd {
 				return setupMsg{name: "ssh", status: 2, err: err, suggestion: "openssh-server安装失败，请检查软件源和包依赖，建议使用" + keyword("lsb_release") + "等命令查看发行版本并更换正确的软件源。\n\n The openssh-server installation fails. Please check the " + keyword("software source") + " and " + keyword("package dependencies") + ". It is recommended to use commands such as " + keyword("lsb_release") + " to check the release version and replace the correct software source."}
 			}
 		}
-		fmt.Println("SSH service exists.")
+		// fmt.Println("SSH service exists.")
 		return setupMsg{name: "ssh", status: 2, err: fmt.Errorf("The ssh service exists."), suggestion: ""}
 	})
 }
