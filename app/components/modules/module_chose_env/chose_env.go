@@ -95,8 +95,11 @@ func (m chose_env_model) ssh_handler() tea.Cmd {
 		ssh_handler_status := false
 		var err error = nil
 		if port_status == false {
+			fmt.Println("SSH service not exist.")
 			if m.Choice == 0 {
 				ssh_handler_status, err = service_cmd.CMD_Exec("apt", "install", "openssh-server", "-y")
+			} else if m.Choice == 1 {
+				ssh_handler_status, err = service_cmd.CMD_Exec("yum", "install", "openssh-server", "-y")
 			}
 			if ssh_handler_status == true {
 				return setupMsg{name: "ssh", status: 1, err: nil}
@@ -104,6 +107,7 @@ func (m chose_env_model) ssh_handler() tea.Cmd {
 				return setupMsg{name: "ssh", status: 2, err: err, suggestion: "openssh-server安装失败，请检查软件源和包依赖，建议使用" + keyword("lsb_release") + "等命令查看发行版本并更换正确的软件源。\n\n The openssh-server installation fails. Please check the " + keyword("software source") + " and " + keyword("package dependencies") + ". It is recommended to use commands such as " + keyword("lsb_release") + " to check the release version and replace the correct software source."}
 			}
 		}
+		fmt.Println("SSH service exists.")
 		return setupMsg{name: "ssh", status: 2, err: fmt.Errorf("The ssh service exists."), suggestion: ""}
 	})
 }
@@ -113,16 +117,13 @@ func (m chose_env_model) ssh_service_handler() tea.Cmd {
 		var err error = nil
 		if m.Choice == 0 {
 			ssh_service_status, err = service_cmd.CMD_Exec("service", "ssh", "restart")
+		} else if m.Choice == 1 {
+			ssh_service_status, err = service_cmd.CMD_Exec("service", "sshd", "restart")
 		}
 		if ssh_service_status == true {
 			return setupMsg{name: "ssh_service", status: 1, err: nil}
 		} else {
-			ssh_service_status, err = service_cmd.CMD_Exec("/etc/init.d/ssh", "restart")
-			if ssh_service_status == true {
-				return setupMsg{name: "ssh_service", status: 1, err: nil}
-			} else {
-				return setupMsg{name: "ssh_service", status: 2, err: err, suggestion: "ssh服务重启时失败，请检查一下.\n\nThe ssh service failed when restarting, please check it."}
-			}
+			return setupMsg{name: "ssh_service", status: 2, err: err, suggestion: "ssh服务重启时失败，请检查.\n\nThe ssh service failed when restarting, please check it."}
 		}
 	})
 }
