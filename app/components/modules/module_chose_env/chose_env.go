@@ -35,7 +35,7 @@ var (
 
 	// Gradient colors we'll use for the progress bar
 	ramp             = makeRamp("#B14FFF", "#00FFA3", progressBarWidth)
-	env_List         = []string{"Ubuntu", "CentOS", "The Others"}
+	env_List         = []string{"Ubuntu or Debian", "CentOS", "The Others"}
 	env_install_List = [][]string{{"ssh", "sshd_config", "ssh_service"}, {"ssh", "sshd_config", "ssh_service"}, {}}
 	chat_message     = []string{"Cool, we need the ", "OKey, we should install ", "Oh sorry, we do not support other versions of Linux at the moment."}
 	sshd_config = `# This is the sshd server system-wide configuration file.  
